@@ -1,30 +1,60 @@
 function knightMoves(start, end) {
-  const [maxCol, maxRow] = 7;
   const queue = [];
-  const visited = [];
-  let steps = 0;
-
-  queue.push(start);
-  visited.push(start);
+  const visited = new Set();
+  const prev = [];
+  let path = [];
   
-  const directionalCol = [-1, -2, -1, 2, 1, 2, 1, -2];
-  const directionalRow = [2, -1, -2, 1, 2, -1, -2, 1];
+  start.previous = null;
+  queue.push(start);
+  visited.add(start.toString());
+  
+  if (start.toString() === end.toString()) {
+    console.log('=> No moves made!');
+    return;
+  }
+  
+  const directions = [
+    [-1,2], [-2,-1], [-1,-2], [2,1], [1,2], [2,-1], [1,-2], [-2,1]
+  ];
 
-  for (let i = 0; i < 8; i++) {
-    newCol = start[0] + directionalCol[i];
-    newRow = start[1] + directionalRow[i];
+  while (queue.length) {
+    let node = queue.shift();
+    if (visited.has(end.toString())) { break; }
 
-    if (newRow < 0 || newCol < 0) { continue; }
-    if (newRow > maxRow || newCol > maxCol) { continue; }
-    
-    let neighbor = [newCol, newRow];
-    
-    if (visited.includes(neighbor)) { continue; }
-    
-    queue.push(neighbor);
-    visited.push(neighbor);
+    for (let dir of directions) {
+      let newCol = node[0] + dir[0];
+      let newRow = node[1] + dir[1];
+
+      if (newRow < 0 || newCol < 0) continue;
+      if (newRow > 7 || newCol > 7) continue;
+      
+      let neighbor = [newCol, newRow];
+      
+      if (visited.has(neighbor.toString())) continue;
+      
+      queue.push(neighbor);
+      visited.add(neighbor.toString());
+      neighbor.previous = node;
+      prev.push(neighbor);
+    }
 
   }
 
-  steps++;
+  let currentNode = prev[prev.length - 1];
+
+  while (currentNode) {
+    path.push(currentNode);
+    currentNode = currentNode.previous;
+  }
+
+  path.reverse();
+
+  console.log(`=> You made it in ${path.length - 1} moves! Here's your path:`);
+  
+  path.forEach((node) => console.log('  [' + node.toString() + ']'));
 }
+
+
+
+knightMoves([0,0],[7,7]);
+knightMoves([3,3],[4,3]);
