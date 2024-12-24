@@ -25,10 +25,10 @@ function knightMoves(start, end) {
       let newCol = node[0] + dir[0];
       let newRow = node[1] + dir[1];
 
-      if (newRow < 0 || newCol < 0) continue;
-      if (newRow > 7 || newCol > 7) continue;
-      
       let neighbor = [newCol, newRow];
+
+      if (newRow < 0 || newCol < 0) continue;
+      if (newRow >= 8 || newCol >= 8) continue;
       
       if (visited.has(neighbor.toString())) continue;
       
@@ -36,6 +36,8 @@ function knightMoves(start, end) {
       visited.add(neighbor.toString());
       neighbor.previous = node;
       prev.push(neighbor);
+
+      if (neighbor.toString() === end.toString()) break;
     }
 
   }
@@ -56,5 +58,5 @@ function knightMoves(start, end) {
 
 
 
-knightMoves([0,0],[7,7]);
+knightMoves([0,0],[4,4]);
 knightMoves([3,3],[4,3]);
